@@ -1,0 +1,53 @@
+<div class="section__content section__content--p30">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-9">
+                <h2 class="title-1 m-b-20">{{ device.name }}</h2>
+            </div>
+            <div class="col-lg-3">
+                <span class="m-r-20">Turn On / Off</span>
+                <label class="switch switch-text switch-success switch-pill">
+                    <input type="checkbox" class="switch-input" checked="{{ device.state }}">
+                    <span class="switch-label"></span>
+                    <span class="switch-handle"></span>
+                </label>
+            </div>
+        </div>
+
+        <hr>
+        <div class="row">
+            <div class="col-lg-9">
+                <h4 class="title-5 m-b-15">Specification</h4>
+                <div class="specs ml-3">
+                    <div class="spec" ng-repeat="(key, value) in device.specification">
+                        {{ capitalizeSpec(key) }}: {{ value }}</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row m-t-20">
+            <div class="col-lg-9">
+                <h4 class="title-5 m-b-15">Monitor</h4>
+                <div class="specs ml-3">
+                    <div class="spec" ng-repeat="(key, value) in monitorData">
+                        Current {{ parametersMap[key].display_name }}: {{ value.length ? value[value.length - 1].value : NaN }}
+                        {{ parametersMap[key].unit }}
+                    </div>
+
+                    <hr>
+
+                    <div ng-repeat="(key, value) in monitorData" class="spec m-b-10 m-t-10">
+                        <div class="mb-2">History {{ parametersMap[key].display_name }}:</div>
+                        <div class="au-card m-b-30">
+                            <div class="au-card-inner"><div class="chartjs-size-monitor" style="position: absolute; left: 0px; top: 0px; right: 0px; bottom: 0px; overflow: hidden; pointer-events: none; visibility: hidden; z-index: -1;"><div class="chartjs-size-monitor-expand" style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;"><div style="position:absolute;width:1000000px;height:1000000px;left:0;top:0"></div></div><div class="chartjs-size-monitor-shrink" style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;"><div style="position:absolute;width:200%;height:200%;left:0; top:0"></div></div></div>
+                              <h3 class="title-2 m-b-40">History {{ parametersMap[key].display_name }}</h3>
+                              <canvas id="team-chart-{{ key }}" height="297" width="594" class="chartjs-render-monitor" style="display: block; width: 594px; height: 297px;"></canvas>
+                          </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
