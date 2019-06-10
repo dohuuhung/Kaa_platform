@@ -1,0 +1,71 @@
+<div class="register-box">
+  <div class="register-logo">
+    <a href="/"><b>IOT</b>BK</a>
+  </div>
+
+  <div class="register-box-body">
+    <p class="login-box-msg">Register a new membership</p>
+
+    <form novalidate name="regForm">
+      <div class="form-group {{ (regForm.username.$dirty && regForm.username.$invalid) ? 'has-warning' : '' }}">
+        <input type="username" class="form-control" placeholder="Username (*)"
+        	name="username" ng-model="username" required>
+        <span class="glyphicon glyphicon-user form-control-feedback"></span>
+      </div>
+
+    	<div class="form-group {{ (regForm.firstname.$dirty && regForm.firstname.$invalid) ? 'has-warning' : '' }}">
+        <input type="text" class="form-control" placeholder="First Name (*)"
+        	name="firstname" ng-model="firstname" required>
+        <span class="glyphicon glyphicon-user form-control-feedback"></span>
+      </div>
+      <div class="form-group {{ (regForm.lastname.$dirty && regForm.lastname.$invalid) ? 'has-warning' : '' }}">
+        <input type="text" class="form-control" placeholder="Last Name (*)"
+        	name="lastname" ng-model="lastname" required>
+        <span class="glyphicon glyphicon-user form-control-feedback"></span>
+      </div>
+      <div class="form-group {{ (regForm.email.$dirty && regForm.email.$invalid) ? 'has-warning' : '' }}">
+        <input type="email" class="form-control" placeholder="Email (*)" ng-model="email" required>
+        <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
+      </div>
+      <div class="form-group {{ (regForm.tenant_name.$dirty && regForm.tenant_name.$invalid) ? 'has-warning' : '' }}">
+        <input type="text" class="form-control" placeholder="Tenant Name (*)"
+        	name="tenant_name" ng-model="tenant_name" required>
+        <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+      </div>
+      
+      <!-- Failed -->
+      <div class="alert alert-danger alert-dismissible" ng-show="failed">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+        <h4><i class="icon fa fa-warning"></i> Failed!</h4>
+        {{ error }}
+      </div>
+
+
+			<div class="alert alert-success alert-dismissible" ng-show="!!success">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+        <h4><i class="icon fa fa-check"></i> Success!</h4>
+        {{ success }}
+      </div>
+
+      <div class="overlay" ng-show="showSpin">
+        <i class="fa fa-refresh fa-spin"></i>
+        {{ spinText }}
+      </div>
+
+      <div class="row">
+        <div class="col-xs-8">
+        	<a href="/login" class="text-center">I already have a membership</a>
+        </div>
+        <!-- /.col -->
+        <div class="col-xs-4">
+          <button type="submit" ng-disabled="regForm.$invalid" ng-click="doRegister()" class="btn btn-primary btn-block btn-flat">Register</button>
+        </div>
+        <!-- /.col -->
+      </div>
+    </form>
+
+    
+  </div>
+  <!-- /.form-box -->
+</div>
+<!-- /.register-box -->

@@ -1,0 +1,114 @@
+<div class="wrapper" ng-controller="DashboardController">
+  <div ng-include="'templates/header.html'"></div>
+  <div ng-include="'templates/sidebar.html'"></div>
+
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <h1>
+        Device Types
+        <small>Control panel</small>
+      </h1>
+      <ol class="breadcrumb">
+        <li><a href="/"><i class="fa fa-dashboard"></i> Home</a></li>
+        <li class="active">Device Type Detail</li>
+      </ol>
+    </section>
+
+    <!-- Main content -->
+    <section class="content" ng-controller="DeviceTypeDetailController">
+      <div class="col-12" ng-show="failed">
+        <div class="alert alert-danger alert-dismissible">
+          <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+          <h4><i class="icon fa fa-ban"></i> Failed!</h4>
+          {{ error }}
+        </div>
+      </div>
+
+      <div class="col-12" ng-show="!!success">
+        <div class="alert alert-success alert-dismissible">
+          <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+          <h4><i class="icon fa fa-check"></i> Success!</h4>
+          {{ success }}
+        </div>
+      </div>
+
+      <div class="nav-tabs-custom">
+      	<ul class="nav nav-tabs">
+				  <li class="{{ tabActive('overviews') }}" ng-click="changeTab('overviews')">
+				  	<a href="#" data-toggle="tab" aria-expanded="false">Overviews</a>
+				  </li>
+				  <li class="{{ tabActive('parameters') }}" ng-click="changeTab('parameters')">
+				  	<a href="#" data-toggle="tab" aria-expanded="false">Parameters</a>
+				  </li>
+				</ul>
+
+				<div class="tab-content">
+					<div class="tab-pane {{ tabActive('overviews') }}" id="overviews">
+						<br>
+	          <form class="form-horizontal">
+	            
+	            <div class="form-group">
+	              <label for="id" class="col-sm-2 control-label">ID</label>
+
+	              <div class="col-sm-8">
+	                <input type="text" class="form-control" id="id" placeholder="ID"
+	                	ng-value="overview.device_type_id" readonly>
+	              </div>
+	            </div>
+
+	            <div class="form-group">
+	              <label for="name" class="col-sm-2 control-label">Name</label>
+
+	              <div class="col-sm-8">
+	                <input type="text" class="form-control" id="name" placeholder="Name"
+	                	ng-value="overview.device_type_name" readonly>
+	              </div>
+	            </div>
+
+	            <div class="form-group">
+	              <label for="token" class="col-sm-2 control-label">Token</label>
+
+	              <div class="col-sm-8">
+	                <input type="text" class="form-control" id="token" placeholder="Token"
+	                	ng-value="overview.device_type_token" readonly>
+	              </div>
+	            </div>
+
+	            <div class="form-group">
+	              <label for="credential_service" class="col-sm-2 control-label">Credential Service</label>
+
+	              <div class="col-sm-8">
+	                <input type="text" class="form-control" id="credential_service" placeholder="Credential Service"
+	                	ng-value="overview.credential_service" readonly>
+	              </div>
+	            </div>
+
+	          </form>
+	        </div>
+
+	        <div class="tab-pane {{ tabActive('parameters') }}" id="parameters">
+	        	<br>
+	        	<table class="table table-hover">
+              <tbody><tr>
+                <th>Parameter Name</th>
+                <th>Metric</th>
+              </tr>
+              <tr ng-repeat="param in parameters">
+                <td>{{ param.display_name }}</td>
+                <td>{{ param.unit }}</td>
+              </tr>
+            </tbody></table>
+	        </div>
+
+				</div>
+      </div>
+	      
+  	</section>
+  </div>
+
+  <div ng-include="'templates/footer.html'"></div>
+</div>
+<!-- ./wrapper -->
+

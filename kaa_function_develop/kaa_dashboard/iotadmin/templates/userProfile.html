@@ -1,0 +1,110 @@
+<div class="wrapper" ng-controller="DashboardController">
+  <div ng-include="'templates/header.html'"></div>
+  <div ng-include="'templates/sidebar.html'"></div>
+
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <h1>
+        Users
+        <small>Control panel</small>
+      </h1>
+      <ol class="breadcrumb">
+        <li><a href="/"><i class="fa fa-dashboard"></i> Home</a></li>
+        <li class="active">User Profile</li>
+      </ol>
+    </section>
+
+    <!-- Main content -->
+    <section class="content" ng-controller="UserProfileController">
+      <div class="row">
+
+        <div class="col-12" ng-show="failed">
+          <div class="alert alert-danger alert-dismissible">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+            <h4><i class="icon fa fa-ban"></i> Failed!</h4>
+            {{ error }}
+          </div>
+        </div>
+
+        <div class="col-12" ng-show="!!success">
+          <div class="alert alert-success alert-dismissible">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+            <h4><i class="icon fa fa-check"></i> Success!</h4>
+            {{ success }}
+          </div>
+        </div>
+
+        <div class="col-md-3" ng-show="!failed">
+          <div class="box box-primary">
+            <div class="box-body box-profile">
+              <img class="profile-user-img img-responsive img-circle" src="dist/img/user2-160x160.jpg" alt="User profile picture">
+
+              <h3 class="profile-username text-center">{{ current_user.firstname + ' ' + current_user.lastname }}</h3>
+
+              <p class="text-muted text-center">{{ current_user.authority }}</p>
+              
+              <button ng-show="current_user.username == user.username" class="btn btn-warning btn-block" ng-click="openModalChangePassword(current_user)"><i class="fa fa-lock"></i>Change password</button>
+              <button class="btn btn-danger btn-block" ng-click="openModalConfirmDelete(current_user)"><i class="fa fa-trash"></i> Delete</button>
+            </div>
+            <!-- /.box-body -->
+          </div>
+        </div>
+        <div class="col-md-9" ng-show="!failed">
+
+          <form class="form-horizontal">
+            <div class="form-group">
+              <label for="username" class="col-sm-2 control-label">Username</label>
+
+              <div class="col-sm-10">
+                <input type="text" class="form-control" id="username" name="username" placeholder=""
+                  ng-value="current_user.username" readonly>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="authority" class="col-sm-2 control-label">Authority</label>
+
+              <div class="col-sm-10">
+                <input type="text" class="form-control" id="authority" placeholder=""
+                  ng-value="current_user.authority" readonly>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="firstname" class="col-sm-2 control-label">First Name</label>
+
+              <div class="col-sm-10">
+                <input type="text" class="form-control" id="firstname" placeholder=""
+                  name="firstname" ng-model="updateData.firstname" ng-value="current_user.firstname" readonly>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="lastname" class="col-sm-2 control-label">Last Name</label>
+
+              <div class="col-sm-10">
+                <input type="text" class="form-control" id="lastname" placeholder=""
+                  name="lastname" ng-model="updateData.lastname" ng-value="current_user.lastname" readonly>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="email" class="col-sm-2 control-label">Email</label>
+
+              <div class="col-sm-10">
+                <input type="email" class="form-control" id="email" placeholder=""
+                  name="email" ng-value="current_user.email" readonly>
+              </div>
+            </div>
+
+
+          </form>
+        </div>
+      </div>
+    </section>
+    <!-- /.content -->
+  </div>
+
+  <div ng-include="'templates/footer.html'"></div>
+</div>
+<!-- ./wrapper -->
+
+      
