@@ -158,7 +158,7 @@ def get_parameters_of_app_use_token(app_token, username, password, tenant_id=Non
 app = Flask(__name__)
 cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
 
-UNKNOWN_ERROR_RESP = app.response_class(response='Unnknown error',
+UNKNOWN_ERROR_RESP = app.response_class(response=json.dumps({'result': 'Unnknown error'}),
                                        status=401,
                                        mimetype='application/json')
 
@@ -170,7 +170,7 @@ authority = {"TENANT_USER": "Tenant user",
 def verify_token(token):
     if not token:
         response = app.response_class(
-            response='Missing Token',
+            response=json.dumps({'result': 'Missing Token'}),
             status=405,
             mimetype='application/json'
         )
@@ -181,14 +181,14 @@ def verify_token(token):
         upm.close_db_connect()
         if user_pass == 401:
             response = app.response_class(
-                response='Token expired',
+                response=json.dumps({'result': 'Token expired'}),
                 status=403,
                 mimetype='application/json'
             )
             return response
         elif user_pass == 402:
             response = app.response_class(
-                response='Invalid token',
+                response=json.dumps({'result': 'Invalid token'}),
                 status=405,
                 mimetype='application/json'
             )
@@ -228,7 +228,8 @@ def login():
                     "authority": authority[auth_result.get('authority')],
                     "display_name": auth_result.get('displayName'),
                     "tenant_name": tenant_name,
-                    "username": auth_result.get('username')}
+                    "username": auth_result.get('username'),
+                    "token": token}
         get_profile_url = URLS['get_current_user_profile'] % (KAA_INFO['kaa_server_addr'],
                                                               KAA_INFO['kaa_server_port'])
         profile_resp = requests.get(get_profile_url, headers=headers,
@@ -238,8 +239,7 @@ def login():
         response = app.response_class(
             response=json.dumps(rep_data),
             status=200,
-            mimetype='application/json',
-            headers={"token": token}
+            mimetype='application/json'
         )
         return response
     else:
@@ -253,7 +253,7 @@ def login():
         # Case: wrong username/password
         if user_temppass == 1 or user_temppass['temp_pass'] != password:
             response = app.response_class(
-                response='Username or password is invalid',
+                response=json.dumps({'result': 'Username or password is invalid'}),
                 status=403,
                 mimetype='application/json'
             )
@@ -261,8 +261,8 @@ def login():
         # Case: Temporary password
         elif user_temppass['temp_pass'] == password:
             response = app.response_class(
-                response='Current password is temporary,'
-                         ' you need change password',
+                response=json.dumps({'result': 'Current password is temporary, '
+                                               'you need change password'}),
                 status=402,
                 mimetype='application/json'
             )
@@ -297,8 +297,8 @@ def registry():
                                registry_result.get('tempPassword'),
                                registry_result.get('mail'))
         response = app.response_class(
-            response='Success registration,'
-                     'we will send a temporary password to your email address.',
+            response=json.dumps({'result': 'Success registration, '
+                                           'we will send a temporary password to your email address.'}),
             status=200,
             mimetype='application/json'
         )
@@ -333,7 +333,7 @@ def change_temporary_password():
         utp.delete_record(username)
         utp.close_db_connect()
         response = app.response_class(
-            response='OK',
+            response=json.dumps({'result': 'OK'}),
             status=200,
             mimetype='application/json'
         )
@@ -354,7 +354,7 @@ def change_password():
             user_pass = verify_result[1]
             if old_password != user_pass['password']:
                 response = app.response_class(
-                    response='Wrong current password',
+                    response=json.dumps({'result': 'Wrong current password'}),
                     status=402,
                     mimetype='application/json'
                 )
@@ -372,7 +372,7 @@ def change_password():
                                                    auth=_auth)
                 if change_pass_result.status_code == 200:
                     response = app.response_class(
-                        response='OK',
+                        response=json.dumps({'result': 'OK'}),
                         status=200,
                         mimetype='application/json'
                     )
@@ -464,7 +464,7 @@ def delete_user(user_id):
                                        auth=_auth)
             if del_result.status_code == 200:
                 response = app.response_class(
-                    response='OK',
+                    response=json.dumps({'result': 'OK'}),
                     status=200,
                     mimetype='application/json'
                 )
@@ -623,7 +623,7 @@ def delete_device_in_kaa_server(device_key_hash):
                                        auth=_auth)
             if del_result.status_code == 200:
                 response = app.response_class(
-                    response='OK',
+                    response=json.dumps({'result': 'OK'}),
                     status=200,
                     mimetype='application/json'
                 )
@@ -741,9 +741,11 @@ def get_specifications_of_device(device_key_hash):
 
 #API11
 @app.route("/api/devices/monitor/<device_type_token>/<device_key_hash>", methods=['POST', 'GET'])
-#API /api/devices/monitor/<device_type_token>/<device_key_hash>?parameter=&limit=
+#API /api/devices/monitor/<device_type_token>/<device_key_hash>?parameter=&limit=&start=&end=
 def get_monitor_of_device(device_type_token, device_key_hash):
     limit = request.args.get('limit', default=20, type=int)
+    start = request.args.get('start', default=0, type=int)
+    end = request.args.get('end', default=0, type=int)
     parameter = request.args.get('parameter', default='', type=str)
     token = request.headers.get('token')
     device_key_hash = device_key_hash.replace('F2FZAC', '/')
@@ -756,6 +758,17 @@ def get_monitor_of_device(device_type_token, device_key_hash):
                 mydb = myclient[KAA_INFO['kaa_database_name']]
                 mycol = mydb["logs_%s" % device_type_token]
                 myquery = {'header.endpointKeyHash.string': device_key_hash}
+                if start:
+                    myquery = {'header.endpointKeyHash.string': device_key_hash,
+                               'header.timestamp.long': {"$gte": start}}
+                elif end:
+                    myquery = {'header.endpointKeyHash.string': device_key_hash,
+                               'header.timestamp.long': {"$lte": end}}
+                elif end and start:
+                    myquery = {'header.endpointKeyHash.string': device_key_hash,
+                               'header.timestamp.long': {"$lte": end, "$gte": start}}
+                else:
+                    pass
                 mydocs = mycol.find(myquery).sort("_id", -1).limit(limit)
                 records = []
                 for mydoc in mydocs:
