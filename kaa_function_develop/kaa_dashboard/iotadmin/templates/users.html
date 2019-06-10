@@ -1,0 +1,81 @@
+<div class="wrapper" ng-controller="DashboardController">
+  <div ng-include="'templates/header.html'"></div>
+  <div ng-include="'templates/sidebar.html'"></div>
+
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <h1>
+        Users
+        <small>Control panel</small>
+      </h1>
+      <ol class="breadcrumb">
+        <li><a href="/"><i class="fa fa-dashboard"></i> Home</a></li>
+        <li class="active">Users</li>
+      </ol>
+    </section>
+
+    <!-- Main content -->
+    <section class="content" ng-controller="UsersController">
+      <div class="col-12" ng-show="failed">
+        <div class="alert alert-danger alert-dismissible">
+          <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+          <h4><i class="icon fa fa-ban"></i> Failed!</h4>
+          {{ error }}
+        </div>
+      </div>
+
+      <div class="col-12" ng-show="!!success">
+        <div class="alert alert-success alert-dismissible">
+          <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+          <h4><i class="icon fa fa-check"></i> Success!</h4>
+          {{ success }}
+        </div>
+      </div>
+
+      <div class="box">
+        <div class="box-header">
+          <h3 class="box-title">Users</h3>
+        </div>
+        <!-- /.box-header -->
+        <div class="box-body">
+          <div id="data_table_wrapper" class="dataTables_wrapper form-inline dt-bootstrap"><div class="row"><div class="col-sm-12">
+            <div class="row"><div class="col-sm-5"><div class="dataTables_info" id="data_table_info" role="status" aria-live="polite">Showing {{ users.length }} entries</div></div></div>
+            <table id="data_table" class="table table-bordered table-striped dataTable" role="grid" aria-describedby="data_table_info">
+            <thead>
+            <tr role="row">
+              <th class="sorting" tabindex="0" aria-controls="data_table" rowspan="1" colspan="1" aria-label="User ID" >ID</th>
+              <th class="sorting" tabindex="0" aria-controls="data_table" rowspan="1" colspan="1" aria-label="Username" >Username</th>
+              <th class="sorting" tabindex="0" aria-controls="data_table" rowspan="1" colspan="1" aria-label="Actions" >Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+              <tr role="row" class="odd" ng-repeat="tenant_user in users">
+                <td class="sorting_1"><a href="{{ route.USERS + '/' + tenant_user.user_id }}">{{ tenant_user.user_id }}</a></td>
+                <td>{{ tenant_user.username }}</td>
+                <td>
+                  <a class="btn small-btn-app" <a href="{{ route.USERS + '/' + tenant_user.user_id }}"><i class="fa fa-tv"></i> Show</a>
+                  <button class="btn small-btn-app btn-danger" ng-click="openModalConfirmDelete(tenant_user)"><i class="fa fa-trash"></i> Delete</button>
+                </td>
+              </tr>
+            </tbody>
+            <tfoot>
+            <tr>
+              <th rowspan="1" colspan="1">ID</th>
+              <th rowspan="1" colspan="1">Username</th>
+              <th rowspan="1" colspan="1">Actions</th>
+            </tr>
+            </tfoot>
+          </table></div></div>
+          <div class="row"><div class="col-sm-5"><div class="dataTables_info" id="data_table_info" role="status" aria-live="polite">Showing {{ users.length }} entries</div></div><!-- <div class="col-sm-7"><div class="dataTables_paginate paging_simple_numbers" id="data_table_paginate"><ul class="pagination"><li class="paginate_button previous disabled" id="data_table_previous"><a href="#" aria-controls="data_table" data-dt-idx="0" tabindex="0">Previous</a></li><li class="paginate_button active"><a href="#" aria-controls="data_table" data-dt-idx="1" tabindex="0">1</a></li><li class="paginate_button "><a href="#" aria-controls="data_table" data-dt-idx="2" tabindex="0">2</a></li><li class="paginate_button "><a href="#" aria-controls="data_table" data-dt-idx="3" tabindex="0">3</a></li><li class="paginate_button "><a href="#" aria-controls="data_table" data-dt-idx="4" tabindex="0">4</a></li><li class="paginate_button "><a href="#" aria-controls="data_table" data-dt-idx="5" tabindex="0">5</a></li><li class="paginate_button "><a href="#" aria-controls="data_table" data-dt-idx="6" tabindex="0">6</a></li><li class="paginate_button next" id="data_table_next"><a href="#" aria-controls="data_table" data-dt-idx="7" tabindex="0">Next</a></li></ul></div></div> --></div></div>
+        </div>
+        <!-- /.box-body -->
+      </div>
+    </section>
+    <!-- /.content -->
+  </div>
+
+  <div ng-include="'templates/footer.html'"></div>
+</div>
+<!-- ./wrapper -->

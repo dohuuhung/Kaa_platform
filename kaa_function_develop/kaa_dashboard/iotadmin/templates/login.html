@@ -1,0 +1,55 @@
+<div class="login-box">
+  <div class="login-logo">
+    <a href="/"><b>IOT</b>BK</a>
+  </div>
+  <!-- /.login-logo -->
+  <div class="login-box-body">
+    <p class="login-box-msg">Sign in to start your session</p>
+
+    <form novalidate name="loginForm">
+      <div class="form-group {{ (loginForm.username.$dirty && loginForm.username.$invalid) ? 'has-warning' : '' }}">
+        <input type="username" class="form-control" placeholder="Username"
+          name="username" ng-model="username" required>
+        <span class="glyphicon glyphicon-user form-control-feedback"></span>
+      </div>
+      <div class="form-group {{ (loginForm.password.$dirty && loginForm.password.$invalid) ? 'has-warning' : '' }}">
+        <input type="password" class="form-control" placeholder="Password"
+          name="password" ng-model="password" required>
+        <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+      </div>
+
+      <!-- Failed -->
+      <div class="alert alert-warning alert-dismissible" ng-show="failed">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+        <h4><i class="icon fa fa-warning"></i> Failed!</h4>
+        {{ error }}
+      </div>
+
+      <div class="alert alert-success alert-dismissible" ng-show="!!success">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+        <h4><i class="icon fa fa-check"></i> Success!</h4>
+        {{ success }}
+      </div>
+
+      <div class="overlay" ng-show="showSpin">
+        <i class="fa fa-refresh fa-spin"></i>
+        {{ spinText }}
+      </div>
+      
+      <div class="row">
+        <div class="col-xs-8">
+          <a href="/register" class="text-center">Register a new membership</a>
+        </div>
+        <!-- /.col -->
+        <div class="col-xs-4">
+          <button type="submit" ng-disabled="loginForm.$invalid" ng-click="doLogin()" class="btn btn-primary btn-block btn-flat">Sign In</button>
+        </div>
+        <!-- /.col -->
+      </div>
+    </form>
+
+  </div>
+  <!-- /.login-box-body -->
+</div>
+<!-- /.login-box -->
+  
